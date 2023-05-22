@@ -1,11 +1,18 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import { Card, Col, ListGroup, ListGroupItem } from 'react-bootstrap'
 import axios from '../axios'
+import { setUserId } from '../redux/slices/userSlice'
 
 const Post = ({ id, title, body, userId }) => {
 	const [user, setUser] = React.useState(null)
 	const [comments, setComments] = React.useState(null)
 	const [showComments, setShowComments] = React.useState(false)
+
+	const dispatch = useDispatch()
+
+	const navigate = useNavigate()
 
 	const getUser = async () => {
 		try {
@@ -25,6 +32,11 @@ const Post = ({ id, title, body, userId }) => {
 		}
 	}
 
+	const clickUserHandler = () => {
+		dispatch(setUserId(userId))
+		navigate(`/profile/${userId}`)
+	}
+
 	React.useEffect(() => {
 		getUser()
 		getComments()
@@ -39,6 +51,8 @@ const Post = ({ id, title, body, userId }) => {
 						alt='Аватар'
 						height='39'
 						className='rounded-circle me-2'
+						style={{ cursor: 'pointer' }}
+						onClick={clickUserHandler}
 					/>
 					{user && user.name}
 				</Card.Header>
@@ -46,29 +60,28 @@ const Post = ({ id, title, body, userId }) => {
 					<Card.Title>{title}</Card.Title>
 					<Card.Text>{body}</Card.Text>
 				</Card.Body>
-				{comments && (
-					<Card.Footer>
-						<ListGroup>
-							<ListGroupItem
-								className='d-flex justify-content-between align-items-center cursor-pointer'
-								style={{ cursor: 'pointer' }}
-								onClick={() => setShowComments(!showComments)}
-							>
-								Комментарии
-								<span className='badge bg-primary rounded-pill'>
-									{comments.length}
-								</span>
-							</ListGroupItem>
-							{showComments &&
-								comments.map(comment => (
-									<ListGroupItem key={comment.id}>
-										<h6>{comment.email}</h6>
-										<p>{comment.body}</p>
-									</ListGroupItem>
-								))}
-						</ListGroup>
-					</Card.Footer>
-				)}
+
+				<Card.Footer>
+					<ListGroup>
+						<ListGroupItem
+							className='d-flex justify-content-between align-items-center cursor-pointer'
+							style={{ cursor: 'pointer' }}
+							onClick={() => setShowComments(!showComments)}
+						>
+							Комментарии
+							<span className='badge bg-primary rounded-pill'>
+								{comments?.length}
+							</span>
+						</ListGroupItem>
+						{showComments &&
+							comments.map(comment => (
+								<ListGroupItem key={comment.id}>
+									<h6>{comment.email}</h6>
+									<p>{comment.body}</p>
+								</ListGroupItem>
+							))}
+					</ListGroup>
+				</Card.Footer>
 			</Card>
 		</Col>
 	)
