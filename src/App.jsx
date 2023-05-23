@@ -14,9 +14,7 @@ function App() {
 				<Routes>
 					<Route path='/' element={<Home />} />
 					<Route path='/about' element={<About />} />
-					<Route path='/profile/:id' element={<UserInfo />} />
-					<Route path='/posts' element={<Posts />} />
-					<Route path='/posts/:id' element={<Post />} />
+					<Route path='/profile' element={<UserInfo />} />
 				</Routes>
 			</Container>
 		</div>

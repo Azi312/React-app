@@ -1,9 +1,9 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Card, Col, ListGroup, ListGroupItem } from 'react-bootstrap'
 import axios from '../axios'
-import { setUserId } from '../redux/slices/userSlice'
+import { fetchUserRequest } from '../redux/slices/userSlice'
 
 const Post = ({ id, title, body, userId }) => {
 	const [user, setUser] = React.useState(null)
@@ -11,7 +11,6 @@ const Post = ({ id, title, body, userId }) => {
 	const [showComments, setShowComments] = React.useState(false)
 
 	const dispatch = useDispatch()
-
 	const navigate = useNavigate()
 
 	const getUser = async () => {
@@ -33,14 +32,14 @@ const Post = ({ id, title, body, userId }) => {
 	}
 
 	const clickUserHandler = () => {
-		dispatch(setUserId(userId))
-		navigate(`/profile/${userId}`)
+		dispatch(fetchUserRequest(userId))
+		navigate(`/profile`)
 	}
 
 	React.useEffect(() => {
 		getUser()
 		getComments()
-	}, [userId, id])
+	}, [id, userId])
 
 	return (
 		<Col xs={12} sm={6} md={4} className='mb-4'>
@@ -64,7 +63,7 @@ const Post = ({ id, title, body, userId }) => {
 				<Card.Footer>
 					<ListGroup>
 						<ListGroupItem
-							className='d-flex justify-content-between align-items-center cursor-pointer'
+							className='d-flex justify-content-between align-items-center'
 							style={{ cursor: 'pointer' }}
 							onClick={() => setShowComments(!showComments)}
 						>

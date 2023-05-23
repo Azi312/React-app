@@ -1,30 +1,21 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Card, Col, ListGroup, Row } from 'react-bootstrap'
-import { Link, useParams } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Card, Col } from 'react-bootstrap'
+import { fetchUserRequest } from '../redux/slices/userSlice'
+import { fetchPostsRequest } from '../redux/slices/postsSlice'
 import { Posts } from '../components'
-import axios from '../axios'
 
 const UserInfo = () => {
-	const [user, setUser] = React.useState(null)
+	const dispatch = useDispatch()
+	const user = useSelector(state => state.user.user)
 	const userId = useSelector(state => state.user.userId)
 
-	console.log(userId)
-
-	const getUser = async () => {
-		try {
-			const response = await axios.get(`/users/${userId}`)
-			setUser(response.data)
-		} catch (error) {
-			console.error(error)
-		}
-	}
-
-	React.useEffect(() => {
+	useEffect(() => {
 		if (userId) {
-			getUser()
+			dispatch(fetchUserRequest(userId))
+			dispatch(fetchPostsRequest({ userId }))
 		}
-	}, [userId])
+	}, [userId, dispatch])
 
 	if (!user) {
 		return null
@@ -46,7 +37,7 @@ const UserInfo = () => {
 					<Card.Text>Вебсайт: {user?.website}</Card.Text>
 				</Card.Body>
 			</Card>
-			<Posts userId={user?.id} />
+			<Posts userId={user.id} />
 		</Col>
 	)
 }
