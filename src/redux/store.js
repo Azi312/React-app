@@ -1,5 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit'
-// import { userSlice } from './slices/userSlice'
 import createSagaMiddleware from 'redux-saga'
 import postsReducer from './slices/postsSlice'
 import rootSaga from './saga/rootSaga'
